@@ -77,7 +77,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="js," />
 
 
 
@@ -93,16 +93,18 @@
 
 
 
-<meta name="description" content="I will glow in the dark turning dust to gold.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="JS数组模拟堆栈和队列流程在面向对象的设计模式中, 一般提供了队列(queue)和堆栈(stack)的方法, 而对于 JS , 可以用数组来模拟流程: 堆栈堆栈操作只允许在一端添加、删除操作, 这端叫做栈顶, 另一端叫做栈底, 秉承后进先出的原则. 1234567891011const arr = []for (let i = 0; i &amp;lt; 5; i++) &amp;#123;  const tem">
+<meta name="keywords" content="js">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JS数组模拟堆栈和队列流程">
+<meta property="og:url" content="http://yoursite.com/2017/07/23/js栈与队列/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="I will glow in the dark turning dust to gold.">
+<meta property="og:description" content="JS数组模拟堆栈和队列流程在面向对象的设计模式中, 一般提供了队列(queue)和堆栈(stack)的方法, 而对于 JS , 可以用数组来模拟流程: 堆栈堆栈操作只允许在一端添加、删除操作, 这端叫做栈顶, 另一端叫做栈底, 秉承后进先出的原则. 1234567891011const arr = []for (let i = 0; i &amp;lt; 5; i++) &amp;#123;  const tem">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-08-14T08:34:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
-<meta name="twitter:description" content="I will glow in the dark turning dust to gold.">
+<meta name="twitter:title" content="JS数组模拟堆栈和队列流程">
+<meta name="twitter:description" content="JS数组模拟堆栈和队列流程在面向对象的设计模式中, 一般提供了队列(queue)和堆栈(stack)的方法, 而对于 JS , 可以用数组来模拟流程: 堆栈堆栈操作只允许在一端添加、删除操作, 这端叫做栈顶, 另一端叫做栈底, 秉承后进先出的原则. 1234567891011const arr = []for (let i = 0; i &amp;lt; 5; i++) &amp;#123;  const tem">
 
 
 
@@ -130,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/07/23/js栈与队列/"/>
 
 
 
 
 
-  <title>Hexo</title>
+  <title>JS数组模拟堆栈和队列流程 | Hexo</title>
   
 
 
@@ -161,9 +163,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -266,9 +266,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -294,9 +294,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/23/js栈与队列/" itemprop="url">JS数组模拟堆栈和队列流程</a></h1>
+          <h1 class="post-title" itemprop="name headline">JS数组模拟堆栈和队列流程</h1>
         
 
         <div class="post-meta">
@@ -376,367 +374,77 @@
       
 
       
+        <h2 id="JS数组模拟堆栈和队列流程"><a href="#JS数组模拟堆栈和队列流程" class="headerlink" title="JS数组模拟堆栈和队列流程"></a>JS数组模拟堆栈和队列流程</h2><p>在面向对象的设计模式中, 一般提供了队列(queue)和堆栈(stack)的方法, 而对于 JS , 可以用数组来模拟流程:</p>
+<h3 id="堆栈"><a href="#堆栈" class="headerlink" title="堆栈"></a>堆栈</h3><p>堆栈操作只允许在一端添加、删除操作, 这端叫做栈顶, 另一端叫做栈底, 秉承后进先出的原则.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> arr = []</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">  <span class="keyword">const</span> temp = i + <span class="number">1</span></div><div class="line">  arr.push(temp) </div><div class="line">  <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;temp&#125;</span>, 进栈了`</span>)</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'\n'</span>)</div><div class="line"><span class="keyword">const</span> len = arr.length</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">  <span class="built_in">console</span>.log(arr.pop() + <span class="string">`, 出栈了`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="队列"><a href="#队列" class="headerlink" title="队列"></a>队列</h3><p>队列操作允许前端插入, 后端取出, 秉承先进先出的原则.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">const</span> arr = []</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</div><div class="line">  <span class="keyword">const</span> temp = i + <span class="number">1</span></div><div class="line">  arr.unshift(temp) </div><div class="line">  <span class="built_in">console</span>.log(<span class="string">`<span class="subst">$&#123;temp&#125;</span>, 插入队列`</span>)</div><div class="line">&#125;</div><div class="line"><span class="built_in">console</span>.log(<span class="string">'\n'</span>)</div><div class="line"><span class="keyword">const</span> len = arr.length</div><div class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</div><div class="line">  <span class="built_in">console</span>.log(arr.pop() + <span class="string">`, 出来了`</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
         
-          
-          JS数组模拟堆栈和队列流程在面向对象的设计模式中, 一般提供了队列(queue)和堆栈(stack)的方法, 而对于 JS , 可以用数组来模拟流程:
-堆栈堆栈操作只允许在一端添加、删除操作, 这端叫做栈顶, 另一端叫做栈底, 秉承后进先出的原则.
-1234567891011const arr = 
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/07/23/js栈与队列/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
+
+      
+    </div>
+
+    <div>
+      
         
+
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
-      
-    </div>
-
-    <div>
       
     </div>
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/23/bulid/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="osjj">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avator.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/06/23/bulid/" itemprop="url">精简版nodejs线上项目部署</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T21:22:21+08:00">
-                2017-06-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/node-js/" itemprop="url" rel="index">
-                    <span itemprop="name">node.js</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
+            <a href="/tags/js/" rel="tag"># js</a>
           
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/06/23/bulid/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/06/23/bulid/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
+      
 
-    <div class="post-body" itemprop="articleBody">
-
+      
       
       
 
       
-        
-          
-           本文不讲解各种技术的详细使用，只把整个node初步部署的过程写出来，最终目的是能确保nodejs成功在云主机跑起来，并能通过自己的IP地址或域名访问得到。长话短说，首先来看看需要做的整个流程：
-
-购买服务器
-购买域名
-DNSPod域名解析
-本地连接主机服务器
-安装nodejs运行环境
-安装pm2进
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/06/23/bulid/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/23/bulid/" rel="next" title="精简版nodejs线上项目部署">
+                <i class="fa fa-chevron-left"></i> 精简版nodejs线上项目部署
+              </a>
+            
           </div>
-          <!--/noindex-->
-        
-      
-    </div>
 
-    <div>
-      
-    </div>
+          <span class="post-nav-divider"></span>
 
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/23/vuex1/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="osjj">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avator.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/23/vuex1/" itemprop="url">Vue的Flux框架--Vuex</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+          <div class="post-nav-prev post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-23T21:15:52+08:00">
-                2017-04-23
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/vue/" itemprop="url" rel="index">
-                    <span itemprop="name">vue</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                <span class="post-meta-divider">|</span>
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-comment-o"></i>
-                </span>
-                <a href="/2017/04/23/vuex1/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/04/23/vuex1/" itemprop="commentCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          
-本文内容主要参考官方教程，为了方便理解，用更加通俗的文字讲解Vuex，也原文内容做一些重点引用。希望会对你有所帮助。
-学习vue之前，最重要是弄懂两个概念，一是“what”，要理解vuex是什么；二是“why”,要清楚为什么要用vuex。
-Vuex是什么？
-Vuex 类似 React 里面的 Re
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/23/vuex1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -744,6 +452,17 @@ Vuex 类似 React 里面的 Re
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -764,8 +483,17 @@ Vuex 类似 React 里面的 Re
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avator.jpg"
@@ -838,6 +566,22 @@ Vuex 类似 React 里面的 Re
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS数组模拟堆栈和队列流程"><span class="nav-number">1.</span> <span class="nav-text">JS数组模拟堆栈和队列流程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#堆栈"><span class="nav-number">1.1.</span> <span class="nav-text">堆栈</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#队列"><span class="nav-number">1.2.</span> <span class="nav-text">队列</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -958,10 +702,10 @@ Vuex 类似 React 里面的 Re
 
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
 
-  
+
 
   
 
@@ -979,6 +723,18 @@ Vuex 类似 React 里面的 Re
       <script id="dsq-count-scr" src="https://osjj.disqus.com/count.js" async></script>
     
 
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/07/23/js栈与队列/';
+          this.page.identifier = '2017/07/23/js栈与队列/';
+          this.page.title = 'JS数组模拟堆栈和队列流程';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://osjj.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
     
 
   

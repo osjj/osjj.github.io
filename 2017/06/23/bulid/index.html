@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="nginx,node.js,后端,云部署,luinx,centos," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本文不讲解各种技术的详细使用，只把整个node初步部署的过程写出来，最终目的是能确保nodejs成功在云主机跑起来，并能通过自己的IP地址或域名访问得到。长话短说，首先来看看需要做的整个流程：  购买服务器 购买域名 DNSPod域名解析 本地连接主机服务器 安装nodejs运行环境 安装pm2进程管理工具 Nginx反向代理与负载均衡配置  上面几个过程，在一些有部署经验的人看来很简单，但对于">
+<meta name="keywords" content="nginx,node.js,后端,云部署,luinx,centos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="精简版nodejs线上项目部署">
+<meta property="og:url" content="http://yoursite.com/2017/06/23/bulid/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本文不讲解各种技术的详细使用，只把整个node初步部署的过程写出来，最终目的是能确保nodejs成功在云主机跑起来，并能通过自己的IP地址或域名访问得到。长话短说，首先来看看需要做的整个流程：  购买服务器 购买域名 DNSPod域名解析 本地连接主机服务器 安装nodejs运行环境 安装pm2进程管理工具 Nginx反向代理与负载均衡配置  上面几个过程，在一些有部署经验的人看来很简单，但对于">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-cf3faa8efc737079.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-331b8a8a5cb6d770.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-dd8b67f51b77ae65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-faef1006e1842018.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-2e6265e7d23aeebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-cb2e2b4fa3304633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-c4285b7214d53d9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-fd8f49fffd707beb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-aa79fb659d9ba257.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-941368c0975d9950.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-70096be1d6bea6f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-c7696f31d63a0d55.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-b562607670fafd28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-ef4ed656ccda6b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-07b751e1f4bbc874.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-1161329d3ba096d7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-f67838bb730cc351.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-f7237d5c3702234a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3977426-8cb35fe9726d951b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-14T08:32:32.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="精简版nodejs线上项目部署">
+<meta name="twitter:description" content="本文不讲解各种技术的详细使用，只把整个node初步部署的过程写出来，最终目的是能确保nodejs成功在云主机跑起来，并能通过自己的IP地址或域名访问得到。长话短说，首先来看看需要做的整个流程：  购买服务器 购买域名 DNSPod域名解析 本地连接主机服务器 安装nodejs运行环境 安装pm2进程管理工具 Nginx反向代理与负载均衡配置  上面几个过程，在一些有部署经验的人看来很简单，但对于">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3977426-cf3faa8efc737079.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/23/bulid/"/>
+
+
+
+
+
+  <title>精简版nodejs线上项目部署 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/23/bulid/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="osjj">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avator.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">精简版nodejs线上项目部署</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-23T21:22:21+08:00">
+                2017-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/node-js/" itemprop="url" rel="index">
+                    <span itemprop="name">node.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/23/bulid/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/23/bulid/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="http://upload-images.jianshu.io/upload_images/3977426-cf3faa8efc737079.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"><br> 本文不讲解各种技术的详细使用，只把整个node初步部署的过程写出来，最终目的是能确保nodejs成功在云主机跑起来，并能通过自己的IP地址或域名访问得到。长话短说，首先来看看需要做的整个流程：</p>
+<ul>
+<li><strong>购买服务器</strong></li>
+<li><strong>购买域名</strong></li>
+<li><strong>DNSPod域名解析</strong></li>
+<li><strong>本地连接主机服务器</strong></li>
+<li><strong>安装nodejs运行环境</strong></li>
+<li><strong>安装pm2进程管理工具</strong></li>
+<li><strong>Nginx反向代理与负载均衡配置</strong></li>
+</ul>
+<p>上面几个过程，在一些有部署经验的人看来很简单，但对于一个初出茅庐的新手来说，碰到的坑还是不少的，虽然可以百度可以谷歌，但网上资源多如繁星，要想快速正确筛选到正确答案，需要付出不少的精力和时间，更糟糕的情况是有些过于陈旧的答案，一旦放到项目使用，因为版本不相同，导致整个项目运行错乱，这时候需要从更加深入的环节才能解决处理，这对一名刚涉及部署上线的人来说是非常辛苦的。下面重回正题，就上面的各个环节更加详细地谈谈。</p>
+<h3 id="购买服务器"><a href="#购买服务器" class="headerlink" title="购买服务器"></a>购买服务器</h3><p>服务器商有很多选择，目前国内最多人使用的是阿里云，我买的是腾讯云。其实服务器都是差不多的，根据性价比买即可。个人购买出了系统选择其他一般按默认选择即可。系统选择linux的CentOS系统，Ubuntu也是linux系统，但CentOS更新，在安装软件时候比Ubuntu更加便捷。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-331b8a8a5cb6d770.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>选好配置后购买付款即可。</p>
+<h3 id="购买域名"><a href="#购买域名" class="headerlink" title="购买域名"></a>购买域名</h3><p>腾讯是新网，阿里是万网，根据性价比买即可。</p>
+<h3 id="DNSPod域名解析"><a href="#DNSPod域名解析" class="headerlink" title="DNSPod域名解析"></a>DNSPod域名解析</h3><p>购买了服务器和域名之后，需要把服务器IP地址绑定到域名方可根据域名运行项目，否则只能通过IP地址来访问。</p>
+<blockquote>
+<p>域名解析有两种方式，一是在当前的购买域名的平台解析，二是使用其他服务商解析，例如我选择的<a href="https://www.dnspod.cn/" target="_blank" rel="external">DNSPod</a>。</p>
+</blockquote>
+<h4 id="1-购买域名的平台解析"><a href="#1-购买域名的平台解析" class="headerlink" title="1.购买域名的平台解析"></a>1.购买域名的平台解析</h4><p>在个人域名控制台打开，点击解析选项。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-dd8b67f51b77ae65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>进入解析版面后点击添加选项，可以下面的弹出框，<strong>只需要把记录类型选为A，主机记录填www，记录值填自己IP地址，其他的默认即可。</strong></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-faef1006e1842018.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h4 id="2-DNSPod平台解析"><a href="#2-DNSPod平台解析" class="headerlink" title="2.DNSPod平台解析"></a>2.DNSPod平台解析</h4><p>打开<a href="https://www.dnspod.cn/" target="_blank" rel="external">DNSPod官网</a>，注册登陆。</p>
+<ul>
+<li>进入域名解析控制台</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-2e6265e7d23aeebf.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>点击域名选项进入主机记录界面</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-cb2e2b4fa3304633.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>点击添加记录，同样<strong>只需要把记录类型选为A，主机记录填www，记录值填自己IP地址，其他的默认即可。</strong></li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-c4285b7214d53d9c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h4 id="注意："><a href="#注意：" class="headerlink" title="注意："></a>注意：</h4><p>自己当前的www.XXX.com是一级域名，可以用这个域名解析多个子域名，也就是二级域名——www.xxx.XXX.com。二级域名是免费无需再购买的。解析方法只需把主机记录值改成二级域名名即可，如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-fd8f49fffd707beb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h3 id="本地登陆主机服务器"><a href="#本地登陆主机服务器" class="headerlink" title="本地登陆主机服务器"></a>本地登陆主机服务器</h3><h4 id="Mac使用iTerm登陆"><a href="#Mac使用iTerm登陆" class="headerlink" title="Mac使用iTerm登陆,"></a>Mac使用iTerm登陆,</h4><ul>
+<li><p>打开iTerm登陆输入：</p>
+<blockquote>
+<p>ssh -t root@公网ip地址  -p 22</p>
+</blockquote>
+</li>
+<li><p>然后在提示会让输入密码，输入登陆即可。</p>
+</li>
+</ul>
+<p>也可以设置<strong>无需输入密码登陆</strong></p>
+<ul>
+<li>打开finder，按command + shift + g 键搜~/.ssh文件</li>
+<li><p>编辑下面内容至文件whatevername，保存在.ssh目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">set user &lt;用户名&gt;</div><div class="line">set host &lt;ip地址&gt;</div><div class="line">set password &lt;密码&gt;</div><div class="line">set timeout -1</div><div class="line"></div><div class="line">spawn ssh $user@$host</div><div class="line">expect &quot;*assword:*&quot;</div><div class="line">send &quot;$password\r&quot;</div><div class="line">interact</div><div class="line">expect eof</div></pre></td></tr></table></figure>
+</li>
+<li><p>打开iTerm2的profiles设置，编辑profiles</p>
+</li>
+<li>在Genernal-&gt;Command下选择 Command，在输入框里填入 expect ~/.ssh/whatevername即可完成，以后每次登陆都用whatevername文件自动填写了信息。<br><img src="http://upload-images.jianshu.io/upload_images/3977426-aa79fb659d9ba257.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></li>
+</ul>
+<h4 id="在window系统下登陆"><a href="#在window系统下登陆" class="headerlink" title="在window系统下登陆"></a>在window系统下登陆</h4><p>使用<strong>putty</strong>登陆：</p>
+<ul>
+<li>打开Putty客户端输入</li>
+<li>Host Name：云服务器的公网IP</li>
+<li>Port：云服务器的端口，必须填22</li>
+<li>Connect type：选择“SSH”</li>
+</ul>
+<p>全部输入完后，点击“Open”，创建一个新对话。</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-941368c0975d9950.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>在Putty会话窗口中，主机帐号密码登录。<br><img src="http://upload-images.jianshu.io/upload_images/3977426-70096be1d6bea6f0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<h3 id="安装nodejs运行环境"><a href="#安装nodejs运行环境" class="headerlink" title="安装nodejs运行环境"></a>安装nodejs运行环境</h3><blockquote>
+<p>yum -y install nodejs</p>
+</blockquote>
+<p>查看版本</p>
+<blockquote>
+<p>node -v</p>
+</blockquote>
+<p>可使用下面命令快速升级到最新版：</p>
+<ul>
+<li><p>首先安装n模块</p>
+<blockquote>
+<p>npm install -g n</p>
+</blockquote>
+</li>
+<li><p>升级命令</p>
+<blockquote>
+<p>n stable</p>
+</blockquote>
+</li>
+</ul>
+<p>这时nodejs已经升到最新版了。</p>
+<p><strong>为了测试node.js的运行，先新建个文件跑一跑:</strong></p>
+<ul>
+<li><p>随便找位置建个空目录：</p>
+<blockquote>
+<p>mkdir -p /data/node</p>
+</blockquote>
+</li>
+<li><p>打开目录,并新建并且编辑app.js文件</p>
+<blockquote>
+<p>cd /data/node</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>vim app.js</p>
+</blockquote>
+<ul>
+<li>将以下测试代码放入：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">const http =require(&apos;http&apos;)</div><div class="line">http.createServer(function(req,res)&#123;</div><div class="line">  res.writeHead(200, &#123;&apos;Content-Type&apos;: &apos;text/plain&apos;&#125;);</div><div class="line">    res.end(&apos;hello world&apos;)</div><div class="line">&#125;).listen(8081)</div><div class="line">console.log(&apos;Server running at http://119.29.72.246:8081/&apos;);</div></pre></td></tr></table></figure>
+<ul>
+<li>保存成功后运行：<blockquote>
+<p>node app.js</p>
+</blockquote>
+</li>
+</ul>
+<p>这时成功运行就可以看到打印信息了：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Server running at http://119.29.72.246:8081/</div></pre></td></tr></table></figure>
+<p>这时根据自己IP地址加端口访问在浏览器访问即可。</p>
+<h3 id="注意：-1"><a href="#注意：-1" class="headerlink" title="注意："></a>注意：</h3><p>这时候如果能访问到’hello world’说明没问题了，如果长久页面跳转不成功，说明端口出了问题，这是服务器的<strong>安全组设置</strong>所导致的。</p>
+<ul>
+<li>打开服务器控制台，打开安全组选项：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-c7696f31d63a0d55.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>打开编辑规则：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-b562607670fafd28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>进入添加规则界面可以看到各条规则，我们要访问哪个端口，必须添加相应的入站规则。（出站规则是本站访问外网时设置的）</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-ef4ed656ccda6b34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>添加规则，来源保持和原来一致，tcp对应的就是要访问的端口号，完成保存。</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-07b751e1f4bbc874.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>现在再回到终端运行nodo app.js就可以访问到8081端口了！</p>
+<blockquote>
+<p>安全组作用和防火墙相似，都是IPTables规则来做包过滤，相当于给主机添加多一重保护，设置了安全组后可以给主机添加多一层防火墙作双重防护。</p>
+</blockquote>
+<h3 id="安装pm2进程管理工具"><a href="#安装pm2进程管理工具" class="headerlink" title="安装pm2进程管理工具"></a>安装pm2进程管理工具</h3><p>基于node命令运行的项目都是一次性，断开主机连接后就不运行了，这时候需要安装用到进程管理工具。相关的工具有pm2，forever，我推荐pm2，更新更强大！</p>
+<ul>
+<li><p>安装pm2:</p>
+<blockquote>
+<p>npm install -g pm2</p>
+</blockquote>
+</li>
+<li><p>使用pm2：</p>
+<blockquote>
+<p>pm2 start app.js</p>
+</blockquote>
+</li>
+<li><p>运行pm2 list可以监控进程列表：</p>
+<blockquote>
+<p>pm2 list</p>
+</blockquote>
+</li>
+</ul>
+<p>pm2的其他命令使用可以参考：<br><a href="https://www.douban.com/note/314200231/" target="_blank" rel="external">https://www.douban.com/note/314200231/</a></p>
+<p>如果pm2运行刚刚app.js端口有冲突，需要更改端口重新运行或者关掉进程重新运行。<strong>Linux查找端口进程和关掉进程的命令：</strong></p>
+<blockquote>
+<p>netstat -apn | grep 端口号</p>
+<p>kill -9 进程的pid号</p>
+</blockquote>
+<h3 id="Nginx配置使用"><a href="#Nginx配置使用" class="headerlink" title="Nginx配置使用"></a>Nginx配置使用</h3><ul>
+<li>安装Nginx之前需要先安装一些依赖和lib库：<blockquote>
+<p>yum install gcc-c++ </p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>yum -y install zlib zlib-devel openssl openssl–devel pcre pcre-devel</p>
+</blockquote>
+<ul>
+<li><p>直接安装<strong>Nginx</strong>:</p>
+<blockquote>
+<p>yum install nginx -y</p>
+</blockquote>
+</li>
+<li><p>查到版本号即安装成功:</p>
+<blockquote>
+<p>nginx -v</p>
+</blockquote>
+</li>
+</ul>
+<h4 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h4><p>刚刚pm2运行的app.js示例是在端口8081下运行的，Nginx的<strong>反向代理设置</strong>可以把端口号去掉或搭配个人域名使用。</p>
+<h5 id="反向代理设置"><a href="#反向代理设置" class="headerlink" title="反向代理设置"></a>反向代理设置</h5><blockquote>
+<p>反向代理需要通过修改Nginx的配置文件来完成，Nginx的默认的配置文件是目录etc/nginx下的nginx.conf文件。</p>
+</blockquote>
+<ul>
+<li>进入etc/nginx文件夹<blockquote>
+<p>cd /etc/nginx</p>
+</blockquote>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-1161329d3ba096d7.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li><p>用编辑方式打开nginx.conf配置文件</p>
+<blockquote>
+<p>vim nginx.conf</p>
+</blockquote>
+</li>
+<li><p>下拉可以看到核心选贤server：</p>
+</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-f67838bb730cc351.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>这个server是Nginx的默认配置，我们需要把默认配置的listen改掉，保留其中一个监听80端口；然后多加一个server选项：</li>
+</ul>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-f7237d5c3702234a.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<ul>
+<li>在添加server的里写上配置：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">  listen 80;</div><div class="line">  server_name 119.29.72.246;</div><div class="line">  location / &#123;</div><div class="line">        proxy_pass http://119.29.72.246:8081;</div><div class="line">  proxy_set_header X-Real-IP $remote_addr;</div><div class="line">  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  </div><div class="line">  proxy_set_header Host $http_host; </div><div class="line">  proxy_set_header X-Nginx-Proxy true;</div><div class="line">  proxy_redirect off;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面配置中，最重要是<strong>server_name</strong>与<strong>proxy_pass</strong>选项，proxy_pass对应的是项目运行原本带有端口的iP 地址，server_name是映射proxy_pass地址的新的地址。至此，Nginx初步配置完成。</p>
+<ul>
+<li>重启一下Nginx就可以通过server_name的地址就可以访问到项目原来带有端口的地址了。</li>
+</ul>
+<blockquote>
+<p>nginx -s reload</p>
+<p><a href="http://119.29.72.246" target="_blank" rel="external">http://119.29.72.246</a> =&gt; <a href="http://119.29.72.246:8081" target="_blank" rel="external">http://119.29.72.246:8081</a>;</p>
+</blockquote>
+<p>域名解析成功后，server_name选项可以用域名代替：</p>
+<blockquote>
+<p>server_name xxx.com; //不用带www</p>
+</blockquote>
+<p>现在可以通过域名访问到原来的端口号了：</p>
+<blockquote>
+<p><a href="http://www.xxx.com" target="_blank" rel="external">http://www.xxx.com</a> =&gt; <a href="http://119.29.72.246:8081" target="_blank" rel="external">http://119.29.72.246:8081</a>;</p>
+</blockquote>
+<p>最后的nginx.conf：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/3977426-8cb35fe9726d951b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image.png"></p>
+<p>到现在Nginx的反向代理已经完成，不过如果想更完善些，还能再调整一下。</p>
+<p>nginx.conf文件下有一句代码:</p>
+<blockquote>
+<p>include /etc/nginx/conf.d/*.conf</p>
+</blockquote>
+<p>这句代码会把conf.d目录下所以的conf文件引入，所以我们其实可以把刚新建的server选项单独写在这些conf文件里，这种方式对管理复杂项目更加便捷。</p>
+<ul>
+<li>打开conf.d目录,新建编辑test.conf</li>
+</ul>
+<blockquote>
+<p>cd conf.d<br>vim test.conf</p>
+</blockquote>
+<ul>
+<li>把刚刚的nginx.conf里新建的server选项<strong>剪贴</strong>到该目录下。</li>
+</ul>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><blockquote>
+<p>所谓负载均衡，就是通过配置多台服务来对单一路径进行访问服务，当有某台主机发生宕机时候，其他主机能承担相应任务，继续提供完整服务。</p>
+</blockquote>
+<p>用刚刚在test.conf做下这个设置，test.conf原文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">server &#123;</div><div class="line">  listen 80;</div><div class="line">  server_name 119.29.72.246;</div><div class="line">  location / &#123;</div><div class="line">        proxy_pass http://119.29.72.246:8081;</div><div class="line">  proxy_set_header X-Real-IP $remote_addr;</div><div class="line">  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  </div><div class="line">  proxy_set_header Host $http_host; </div><div class="line">  proxy_set_header X-Nginx-Proxy true;</div><div class="line">  proxy_redirect off;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>改写后的最终文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">upstream roots &#123;</div><div class="line">  server 119.29.72.246:8081;</div><div class="line">&#125;</div><div class="line"></div><div class="line">server &#123;</div><div class="line">  listen 80;</div><div class="line">  server_name 119.29.72.246;</div><div class="line">  location / &#123;</div><div class="line">        proxy_pass http://roots;</div><div class="line">  proxy_set_header X-Real-IP $remote_addr;</div><div class="line">  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  </div><div class="line">  proxy_set_header Host $http_host; </div><div class="line">  proxy_set_header X-Nginx-Proxy true;</div><div class="line">  proxy_redirect off;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到这个变动只是把server的proxy_pass对应的提取出来，然后在upstream里单独设置。当想设置负载均衡时，只需在upstream里继续添加主机Ip，如：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">upstream roots &#123;</div><div class="line">  server 119.29.72.246:8081;</div><div class="line">  server 119.221.72.246:3000;</div><div class="line">  server 119.221.12.246:3000;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样就可以设置多台主机为119.29.72.246这个访问提供服务了。</p>
+<p>更多干货请访问<a href="https://github.com/osjj/" target="_blank" rel="external">https://github.com/osjj/</a>。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/nginx/" rel="tag"># nginx</a>
+          
+            <a href="/tags/node-js/" rel="tag"># node.js</a>
+          
+            <a href="/tags/后端/" rel="tag"># 后端</a>
+          
+            <a href="/tags/云部署/" rel="tag"># 云部署</a>
+          
+            <a href="/tags/luinx/" rel="tag"># luinx</a>
+          
+            <a href="/tags/centos/" rel="tag"># centos</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/04/23/vuex1/" rel="next" title="Vue的Flux框架--Vuex">
+                <i class="fa fa-chevron-left"></i> Vue的Flux框架--Vuex
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/23/js栈与队列/" rel="prev" title="JS数组模拟堆栈和队列流程">
+                JS数组模拟堆栈和队列流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avator.jpg"
+               alt="osjj" />
+          <p class="site-author-name" itemprop="name">osjj</p>
+           
+              <p class="site-description motion-element" itemprop="description">I will glow in the dark turning dust to gold.</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/osjj" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#购买服务器"><span class="nav-number">1.</span> <span class="nav-text">购买服务器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#购买域名"><span class="nav-number">2.</span> <span class="nav-text">购买域名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DNSPod域名解析"><span class="nav-number">3.</span> <span class="nav-text">DNSPod域名解析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-购买域名的平台解析"><span class="nav-number">3.1.</span> <span class="nav-text">1.购买域名的平台解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-DNSPod平台解析"><span class="nav-number">3.2.</span> <span class="nav-text">2.DNSPod平台解析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#注意："><span class="nav-number">3.3.</span> <span class="nav-text">注意：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地登陆主机服务器"><span class="nav-number">4.</span> <span class="nav-text">本地登陆主机服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Mac使用iTerm登陆"><span class="nav-number">4.1.</span> <span class="nav-text">Mac使用iTerm登陆,</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在window系统下登陆"><span class="nav-number">4.2.</span> <span class="nav-text">在window系统下登陆</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装nodejs运行环境"><span class="nav-number">5.</span> <span class="nav-text">安装nodejs运行环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意：-1"><span class="nav-number">6.</span> <span class="nav-text">注意：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装pm2进程管理工具"><span class="nav-number">7.</span> <span class="nav-text">安装pm2进程管理工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Nginx配置使用"><span class="nav-number">8.</span> <span class="nav-text">Nginx配置使用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Nginx配置"><span class="nav-number">8.1.</span> <span class="nav-text">Nginx配置</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#反向代理设置"><span class="nav-number">8.1.1.</span> <span class="nav-text">反向代理设置</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#负载均衡"><span class="nav-number">8.2.</span> <span class="nav-text">负载均衡</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">osjj</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://osjj.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/06/23/bulid/';
+          this.page.identifier = '2017/06/23/bulid/';
+          this.page.title = '精简版nodejs线上项目部署';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://osjj.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
